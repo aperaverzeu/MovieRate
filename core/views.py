@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -11,17 +12,17 @@ from core.serializers import MovieSerializer, GenreSerializer, RentalCertificate
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+    authentication_classes = (TokenAuthentication,)
 
     @action(detail=True, methods=['POST'])
     def rate_movie(self, request, pk=None):
         if 'stars' in request.data:
             movie = Movie.objects.get(id=pk)
             stars = request.data['stars']
-            #user = request.user
-            user = User.objects.get(id=1)
+            user = request.user
 
             try:
-                rating = Rating.objects.get(user=user.id, movie = movie.id)
+                rating = Rating.objects.get(user=user.id, movie=movie.id)
                 rating.stars = stars
                 rating.save()
                 serializer = RatingSerializer(rating, many=False)
@@ -43,13 +44,16 @@ class MovieViewSet(viewsets.ModelViewSet):
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
+    authentication_classes = (TokenAuthentication,)
 
 
 class RentalCertificateViewSet(viewsets.ModelViewSet):
     queryset = RentalCertificate.objects.all()
     serializer_class = RentalCertificateSerializer
+    authentication_classes = (TokenAuthentication,)
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    authentication_classes = (TokenAuthentication,)
