@@ -67,6 +67,16 @@ class MovieViewSet(viewsets.ModelViewSet):
             response = {'message': 'You have to provide stars'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
+    permission_classes_by_action = {'create': [IsAdminUser],
+                                    'update': [IsAdminUser],
+                                    'delete': [IsAdminUser]}
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError:
+            return [permission() for permission in self.permission_classes]
+
 
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
