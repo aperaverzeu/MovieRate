@@ -8,7 +8,7 @@
                 @movie-selected="movieSelected($event)"
             />
         </div>
-        <MovieDetails :movie="selectedMovie"/>
+        <MovieDetails :movie="selectedMovie" @rated="rated()"/>
     </div>
 </template>
 
@@ -31,18 +31,29 @@ export default ({
     methods: {
         movieSelected(movieId) {
             this.selectedMovie = this.movies.find(movie => movie.id === movieId);
+        },
+        rated() {
+            this.getMovies()
+        },
+        getMovies() {
+            fetch('http://127.0.0.1:8000/core/movies/', {
+                method: 'get',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            })
+            .then(movies => movies.json())
+            .then(movies => {
+                this.movies = movies;
+                if (this.selectedMovie) {
+                    this.selectedMovie = this.movies.find(movie => movie.id === this.selectedMovie.id);
+                }
+            })
+            .catch(error => console.log(error))
         }
     },
     created() {
-        fetch('http://127.0.0.1:8000/core/movies/', {
-            method: 'get',
-            headers: {
-                'content-type': 'application/json'
-            }
-        })
-            .then(movies => movies.json())
-            .then(movies => this.movies = movies)
-            .catch(error => console.log(error))
+        this.getMovies()
     },
 })
 </script>
