@@ -6,33 +6,59 @@
                 :key="movie.id"
                 :movie="movie"
                 @movie-selected="movieSelected($event)"
+                @movie-delete="movieDelete($event)"
+                @movie-edit="movieEdit($event)"
             />
+            <button @click="addNewMovie()">New Movie</button>
         </div>
-        <MovieDetails :movie="selectedMovie" @rated="rated()"/>
+        <MovieDetails v-if="selectedMovie" :movie="selectedMovie" @updated="updated()"/>
+        <MovieEdit v-if="editedMovie" :movie="editedMovie" @updated="updated()"/>
     </div>
 </template>
 
 <script>
 import MovieItem from './MovieItem'
 import MovieDetails from './MovieDetails'
+import MovieEdit from './MovieEdit'
 
 export default ({
     name: "Movies",
     components: { 
         MovieItem,
-        MovieDetails
+        MovieDetails,
+        MovieEdit
     },
     data() {
         return {
             movies: [],
-            selectedMovie: null
+            selectedMovie: null,
+            editedMovie: null,
         }
     },
     methods: {
         movieSelected(movieId) {
+            this.editedMovie = null;
             this.selectedMovie = this.movies.find(movie => movie.id === movieId);
         },
-        rated() {
+        movieDelete(movieId) {
+            fetch(`http://127.0.0.1:8000/core/movies/${movieId}/rate_movie/`, {
+                method: 'delete',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            })
+            .then(() => this.movies = this.movies.filter(movie => movie.id !== movieId))
+            .catch(error => console.log(error))
+        },
+        movieEdit(movieId) {
+            this.selectedMovie = null;
+            this.editedMovie = this.movies.find(movie => movie.id === movieId);
+        },
+        addNewMovie() {
+            this.selectedMovie = null;
+            this.editedMovie = {title: '', description: ''};
+        },
+        updated() {
             this.getMovies()
         },
         getMovies() {

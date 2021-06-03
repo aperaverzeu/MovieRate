@@ -1,5 +1,5 @@
 <template>
-    <div v-if="movie">
+    <div>
         <h2>{{movie.title}}</h2>
         <p>{{movie.description}}</p>
         <font-awesome-icon icon="star" :class="[movie.average_rating > 0 ? 'orange' : '']"/>
@@ -42,7 +42,7 @@ export default ({
         })
         .then(resp => resp.json())
         .then(resp => {
-            this.$emit('rated');
+            this.$emit('updated');
             console.log(resp);
         })
         .catch(error => console.log(error))
