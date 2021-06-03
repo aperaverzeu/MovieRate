@@ -11,8 +11,8 @@
             />
             <button @click="addNewMovie()">New Movie</button>
         </div>
-        <MovieDetails v-if="selectedMovie" :movie="selectedMovie" @updated="updated()"/>
-        <MovieEdit v-if="editedMovie" :movie="editedMovie" @updated="updated()"/>
+        <MovieDetails v-if="selectedMovie" :movie="selectedMovie" @updated="updated()" :token="token"/>
+        <MovieEdit v-if="editedMovie" :movie="editedMovie" @updated="updated()" :token="token"/>
     </div>
 </template>
 
@@ -33,6 +33,7 @@ export default ({
             movies: [],
             selectedMovie: null,
             editedMovie: null,
+            token: ''
         }
     },
     methods: {
@@ -41,10 +42,11 @@ export default ({
             this.selectedMovie = this.movies.find(movie => movie.id === movieId);
         },
         movieDelete(movieId) {
-            fetch(`http://127.0.0.1:8000/core/movies/${movieId}/rate_movie/`, {
+            fetch(`http://127.0.0.1:8000/core/movies/${movieId}/`, {
                 method: 'delete',
                 headers: {
-                    'content-type': 'application/json'
+                    'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'authorization': `Token ${this.token}`
                 }
             })
             .then(() => this.movies = this.movies.filter(movie => movie.id !== movieId))
@@ -56,7 +58,7 @@ export default ({
         },
         addNewMovie() {
             this.selectedMovie = null;
-            this.editedMovie = {title: '', description: ''};
+            this.editedMovie = {title: '', description: '', genre: []};
         },
         updated() {
             this.getMovies()
@@ -65,7 +67,8 @@ export default ({
             fetch('http://127.0.0.1:8000/core/movies/', {
                 method: 'get',
                 headers: {
-                    'content-type': 'application/json'
+                    'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'authorization': `Token ${this.token}`
                 }
             })
             .then(movies => movies.json())
@@ -79,7 +82,12 @@ export default ({
         }
     },
     created() {
-        this.getMovies()
+        if (this.$cookie.get("auth-token")) {
+            this.token = this.$cookie.get("auth-token");
+            this.getMovies();
+        } else {
+            this.$router.push("/auth");
+        }
     },
 })
 </script>

@@ -12,7 +12,7 @@
 
 export default ({
     name: "MovieEdit",
-    props: ['movie'],
+    props: ['movie', 'token'],
     data() {
         return {
             localMovie: {...this.movie}
@@ -28,33 +28,39 @@ export default ({
     methods: {
         saveMovie() {
             if (this.movie.id) {
-                fetch(`http://127.0.0.1:8000/core/movies/${this.movie.id}/rate_movie/`, {
+                fetch(`http://127.0.0.1:8000/core/movies/${this.movie.id}/`, {
                     method: 'put',
                     headers: {
-                        'content-type': 'application/json'
+                        'Content-Type' : 'application/json',
+                        'authorization': `Token ${this.token}`
                     },
-                    body: JSON.stringify({title: this.localMovie.title, description: this.localMovie.description}) 
+                    body: JSON.stringify({title: this.localMovie.title, 
+                                          description: this.localMovie.description, 
+                                          genre: this.localMovie.genre}) 
                     
                 })
-                .then(resp => resp.json())
-                .then(resp => {
+                .then(res => res.json())
+                .then(res => {
                     this.$emit('updated');
-                    console.log(resp);
+                    console.log(res);
                 })
                 .catch(error => console.log(error))
             } else {
                 fetch(`http://127.0.0.1:8000/core/movies/`, {
                     method: 'post',
                     headers: {
-                        'content-type': 'application/json'
+                        'Content-Type' : 'application/json',
+                        'authorization': `Token ${this.token}`
                     },
-                    body: JSON.stringify({title: this.localMovie.title, description: this.localMovie.description}) 
+                    body: JSON.stringify({title: this.localMovie.title, 
+                                          description: this.localMovie.description, 
+                                          genre: [1]}) 
                     
                 })
-                .then(resp => resp.json())
-                .then(resp => {
+                .then(res => res.json())
+                .then(res => {
                     this.$emit('updated');
-                    console.log(resp);
+                    console.log(res);
                 })
                 .catch(error => console.log(error))
             }

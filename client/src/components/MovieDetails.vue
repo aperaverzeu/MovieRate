@@ -24,7 +24,7 @@
 <script>
 export default ({
     name: "MovieDetails",
-    props: ['movie'],
+    props: ['movie', 'token'],
     data() {
         return {
             stars: [0,1,2,3,4],
@@ -36,14 +36,15 @@ export default ({
             fetch(`http://127.0.0.1:8000/core/movies/${this.movie.id}/rate_movie/`, {
             method: 'post',
             headers: {
-                'content-type': 'application/json'
+                'Content-Type' : 'application/json',
+                'authorization': `Token ${this.token}`
             },
             body: JSON.stringify({stars: rate + 1})
         })
-        .then(resp => resp.json())
-        .then(resp => {
+        .then(res => res.json())
+        .then(res => {
             this.$emit('updated');
-            console.log(resp);
+            console.log(res);
         })
         .catch(error => console.log(error))
         },

@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Movies from '../components/Movies.vue'
+import Auth from '../components/Auth.vue'
 
 const routes = [
   {
@@ -8,9 +9,9 @@ const routes = [
     component: Movies
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import( '../views/About.vue')
+    path: '/auth',
+    name: 'Auth',
+    component: Auth
   }
 ]
 
