@@ -1,18 +1,22 @@
 <template>
-    <div class="layout">
-        <div>
-            <MovieItem 
-                v-for="movie in movies" 
-                :key="movie.id"
-                :movie="movie"
-                @movie-selected="movieSelected($event)"
-                @movie-delete="movieDelete($event)"
-                @movie-edit="movieEdit($event)"
-            />
-            <button @click="addNewMovie()">New Movie</button>
+    <div>
+        <button @click="logout()">Logout</button>
+        <div class="layout">
+            <div>
+                <MovieItem 
+                    v-for="movie in movies" 
+                    :key="movie.id"
+                    :movie="movie"
+                    :display="isAdmin"
+                    @movie-selected="movieSelected($event)"
+                    @movie-delete="movieDelete($event)"
+                    @movie-edit="movieEdit($event)"
+                />
+                <button v-if="isAdmin" @click="addNewMovie()">New Movie</button>
+            </div>
+            <MovieDetails v-if="selectedMovie" :movie="selectedMovie" @updated="updated()" :token="token"/>
+            <MovieEdit v-if="editedMovie" :movie="editedMovie" @updated="updated()" :token="token"/>
         </div>
-        <MovieDetails v-if="selectedMovie" :movie="selectedMovie" @updated="updated()" :token="token"/>
-        <MovieEdit v-if="editedMovie" :movie="editedMovie" @updated="updated()" :token="token"/>
     </div>
 </template>
 
@@ -33,7 +37,8 @@ export default ({
             movies: [],
             selectedMovie: null,
             editedMovie: null,
-            token: ''
+            token: '',
+            isAdmin: false
         }
     },
     methods: {
@@ -79,11 +84,31 @@ export default ({
                 }
             })
             .catch(error => console.log(error))
+        },
+        checkAdmin() {
+            fetch(`http://127.0.0.1:8000/core/movies/0/is_admin/`, {
+                    method: 'post',
+                    headers: {
+                    'Content-Type' : 'application/json',
+                    'authorization': `Token ${this.token}`
+                }
+            })
+            .then(res => res.json())
+            .then((res) => {
+                const isAdmin = res.is_admin;
+                this.isAdmin = isAdmin;
+            })
+            .catch(error => console.log(error))
+        },
+        logout() {
+            this.$cookie.remove('auth-token');
+            this.$router.push("/auth");
         }
     },
     created() {
         if (this.$cookie.get("auth-token")) {
             this.token = this.$cookie.get("auth-token");
+            this.checkAdmin();
             this.getMovies();
         } else {
             this.$router.push("/auth");

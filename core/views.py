@@ -17,12 +17,29 @@ class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
+    permission_classes_by_action = {'create': [AllowAny]}
+
+    def create(self, request, *args, **kwargs):
+        return super(UserViewSet, self).create(request, *args, **kwargs)
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError:
+            return [permission() for permission in self.permission_classes]
+
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
+    @action(detail=True, methods=['POST'])
+    def is_admin(self, request, pk=None):
+        user = request.user
+        response = {'is_admin': user.is_superuser}
+        return Response(response, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['POST'])
     def rate_movie(self, request, pk=None):

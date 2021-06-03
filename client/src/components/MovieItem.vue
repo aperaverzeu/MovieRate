@@ -1,7 +1,7 @@
 <template>
     <div class="item">
         <h2 @click="$emit('movie-selected', movie.id)">{{movie.title}}</h2>
-        <h2>
+        <h2 v-if="display">
             <font-awesome-icon icon="trash" @click="$emit('movie-delete', movie.id)"/>
             &nbsp;
             <font-awesome-icon icon="edit" @click="$emit('movie-edit', movie.id)"/>
@@ -12,7 +12,7 @@
 <script>
 export default ({
     name: "MovieItem",
-    props: ['movie']
+    props: ['movie', 'display']
 })
 </script>
 

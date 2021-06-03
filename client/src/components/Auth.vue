@@ -4,7 +4,11 @@
         <input type="text" placeholder="username" id="username" v-model="username"><br/>
         <label for="password">Description</label><br/>
         <input type="password" placeholder="password" id="password" v-model="password"><br/>
-        <button @click="login()">Login</button>
+        <button @click="login()" v-if="loginMode">Login</button>
+        <button @click="register()" v-else>Register</button>
+
+        <p @click="loginMode = false" v-if="loginMode">Don't have an account? Register here</p>
+        <p @click="loginMode = true" v-else>You already have an account. Login here</p>
     </div>
 </template>
 
@@ -14,7 +18,9 @@ export default {
   data() {
       return {
           username: '',
-          password: ''
+          password: '',
+          token: '',
+          loginMode: true
       }
   },
   created() {
@@ -30,16 +36,34 @@ export default {
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify({username: this.username, password: this.password}) 
-                
             })
             .then(res => res.json())
             .then(res => {
-                let token = res.token;
-                this.$cookie.set('auth-token', token, { expires: '1M' });
-                this.$router.push("/")
+                this.token = res.token;
+                this.$cookie.set('auth-token', this.token, { expires: '1M' });
+                this.$router.push("/");
             })
             .catch(error => console.log(error))
+        }
+      },
+      register() {
+        fetch(`http://127.0.0.1:8000/core/users/`, {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({username: this.username, password: this.password}) 
+        })
+        .then(() => {
+            this.login()
+        })
+        .catch(error => console.log(error))
       }
   }
-}
 </script>
+
+<style scoped>
+    p {
+        cursor: pointer;
+    }
+</style>
