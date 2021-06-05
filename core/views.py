@@ -71,6 +71,19 @@ class MovieViewSet(viewsets.ModelViewSet):
                                     'update': [IsAdminUser],
                                     'delete': [IsAdminUser]}
 
+    def update(self, request, *args, pk=None):
+        movie = Movie.objects.get(id=pk)
+        movie.title = request.data['title']
+        movie.description = request.data['description']
+        movie.save()
+        genres = GenreSerializer(request.data['genres'], many=True)
+        movie.genres.clear()
+        for genre in genres.data:
+            genre_to_add = Genre.objects.get(pk=genre['id'])
+            movie.genres.add(genre_to_add)
+        movie.save()
+        return Response({'me': 'I'}, status=status.HTTP_200_OK)
+
     def get_permissions(self):
         try:
             return [permission() for permission in self.permission_classes_by_action[self.action]]

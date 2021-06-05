@@ -4,6 +4,10 @@
         <input type="text" placeholder="title" id="title" v-model="localMovie.title"><br/>
         <label for="description">Description</label><br/>
         <textarea id="description" placeholder="description" v-model="localMovie.description"></textarea><br/>
+        <label for="description">Genres</label><br/>
+        <select v-model="selectedGenres" multiple>
+            <option v-for="genre in genres" :key="genre.id" :value="genre">{{genre.name}}</option>
+        </select><br/>
         <button @click="saveMovie()">Save Movie</button>
     </div>
 </template>
@@ -12,10 +16,11 @@
 
 export default ({
     name: "MovieEdit",
-    props: ['movie', 'token'],
+    props: ['movie', 'token', 'genres'],
     data() {
         return {
-            localMovie: {...this.movie}
+            localMovie: {...this.movie},
+            selectedGenres: []
         } 
     },
     watch: {
@@ -36,7 +41,7 @@ export default ({
                     },
                     body: JSON.stringify({title: this.localMovie.title, 
                                           description: this.localMovie.description, 
-                                          genres: this.localMovie.genres})
+                                          genres: this.selectedGenres})
                     
                 })
                 .then(res => res.json())
@@ -54,7 +59,7 @@ export default ({
                     },
                     body: JSON.stringify({title: this.localMovie.title, 
                                           description: this.localMovie.description, 
-                                          genres: [1]})
+                                          genres: this.selectedGenres})
                     
                 })
                 .then(res => res.json())
@@ -64,6 +69,11 @@ export default ({
                 })
                 .catch(error => console.log(error))
             }
+        }
+    },
+    created() {
+        if (this.localMovie.id > 0) {
+            this.selectedGenres = this.localMovie.genres;
         }
     }
 })

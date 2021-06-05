@@ -6,11 +6,17 @@ from django.db import models
 class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True, db_index=True)
 
+    class Meta:
+        default_related_name = 'genres'
+
 
 class Movie(models.Model):
     title = models.CharField(max_length=50, db_index=True)
     description = models.TextField(max_length=500, db_index=True)
-    genres = models.ManyToManyField(Genre, blank=True, related_name='movies')
+    genres = models.ManyToManyField(Genre, blank=True)
+
+    class Meta:
+        default_related_name = 'movies'
 
     def ratings_amount(self):
         ratings = Rating.objects.filter(movie=self)

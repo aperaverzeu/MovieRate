@@ -15,7 +15,7 @@
                 <button v-if="isAdmin" @click="addNewMovie()">New Movie</button>
             </div>
             <MovieDetails v-if="selectedMovie" :movie="selectedMovie" @updated="updated()" :token="token"/>
-            <MovieEdit v-if="editedMovie" :movie="editedMovie" @updated="updated()" :token="token"/>
+            <MovieEdit v-if="editedMovie" :movie="editedMovie" :genres="genres" @updated="updated()" :token="token"/>
         </div>
     </div>
 </template>
@@ -35,6 +35,7 @@ export default ({
     data() {
         return {
             movies: [],
+            genres: [],
             selectedMovie: null,
             editedMovie: null,
             token: '',
@@ -78,11 +79,25 @@ export default ({
             })
             .then(movies => movies.json())
             .then(movies => {
-                console.log(movies);
                 this.movies = movies;
                 if (this.selectedMovie) {
                     this.selectedMovie = this.movies.find(movie => movie.id === this.selectedMovie.id);
                 }
+            })
+            .catch(error => console.log(error))
+        },
+        getGenres() {
+            fetch('http://127.0.0.1:8000/core/genres/', {
+                method: 'get',
+                headers: {
+                    'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'authorization': `Token ${this.token}`
+                }
+            })
+            .then(genres => genres.json())
+            .then(genres => {
+                console.log(genres);
+                this.genres = genres;
             })
             .catch(error => console.log(error))
         },
@@ -111,6 +126,7 @@ export default ({
             this.token = this.$cookie.get("auth-token");
             this.checkAdmin();
             this.getMovies();
+            this.getGenres();
         } else {
             this.$router.push("/auth");
         }

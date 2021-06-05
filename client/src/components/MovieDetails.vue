@@ -2,6 +2,9 @@
     <div>
         <h2>{{movie.title}}</h2>
         <p>{{movie.description}}</p>
+        <div class="genres-container">
+            <span v-for="genre in movie.genres" :key="genre.id" class="genre">{{genre.name}}</span>
+        </div>
         <font-awesome-icon icon="star" :class="[movie.average_rating > 0 ? 'orange' : '']"/>
         <font-awesome-icon icon="star" :class="[movie.average_rating > 1 ? 'orange' : '']"/>
         <font-awesome-icon icon="star" :class="[movie.average_rating > 2 ? 'orange' : '']"/>
@@ -64,5 +67,12 @@ export default ({
     }
     .bigger {
         font-size: 2rem;
+    }
+    .genre-container {
+        margin-bottom: 1rem;
+    }
+    .genre {
+        padding: 0.5rem 0.2rem;
+        border: 1px solid black;
     }
 </style>
