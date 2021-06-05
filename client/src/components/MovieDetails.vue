@@ -5,6 +5,11 @@
         <div class="genres-container">
             <span v-for="genre in movie.genres" :key="genre.id" class="genre">{{genre.name}}</span>
         </div>
+        <button type="button" class="collapsible" @click="open = !open">Rental Certificate</button>
+        <div class="content" :class="[open ? 'display-block' : 'display-none']">
+            <RentalCertificate v-if="isAdmin" :token="token" :movie="movie"/>
+        </div>
+        <div class="mb-2"></div>
         <font-awesome-icon icon="star" :class="[movie.average_rating > 0 ? 'orange' : '']"/>
         <font-awesome-icon icon="star" :class="[movie.average_rating > 1 ? 'orange' : '']"/>
         <font-awesome-icon icon="star" :class="[movie.average_rating > 2 ? 'orange' : '']"/>
@@ -25,13 +30,19 @@
 </template>
 
 <script>
+import RentalCertificate from './RentalCertificate.vue'
+
 export default ({
     name: "MovieDetails",
-    props: ['movie', 'token'],
+    components: {
+        RentalCertificate
+    },
+    props: ['movie', 'token', 'isAdmin'],
     data() {
         return {
             stars: [0,1,2,3,4],
-            highlighted: 4
+            highlighted: 4,
+            open: false
         }
     },
     methods: {
@@ -68,11 +79,45 @@ export default ({
     .bigger {
         font-size: 2rem;
     }
-    .genre-container {
-        margin-bottom: 1rem;
+    .genres-container {
+        margin-bottom: 1.5rem;
     }
     .genre {
         padding: 0.5rem 0.2rem;
         border: 1px solid black;
+    }
+    .collapsible {
+        background-color: rgb(124, 124, 124);
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .active, .collapsible:hover {
+        background-color: #555;
+    }
+
+    .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
+
+    .mb-2 {
+        margin-bottom: 2rem;
+    }
+
+    .display-none {
+        display: none;
+    }
+
+    .display-block {
+        display: block;
     }
 </style>

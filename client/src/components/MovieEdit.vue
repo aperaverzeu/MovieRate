@@ -44,10 +44,8 @@ export default ({
                                           genres: this.selectedGenres})
                     
                 })
-                .then(res => res.json())
-                .then(res => {
+                .then(() => {
                     this.$emit('updated');
-                    console.log(res);
                 })
                 .catch(error => console.log(error))
             } else {
@@ -62,10 +60,8 @@ export default ({
                                           genres: this.selectedGenres})
                     
                 })
-                .then(res => res.json())
-                .then(res => {
+                .then(() => {
                     this.$emit('updated');
-                    console.log(res);
                 })
                 .catch(error => console.log(error))
             }

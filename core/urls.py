@@ -10,7 +10,7 @@ router.register('users', UserViewSet)
 router.register('movies', MovieViewSet)
 router.register('ratings', RatingViewSet)
 router.register('genres', GenreViewSet)
-router.register('rentalCertificates', RentalCertificateViewSet)
+router.register('rental_certificates', RentalCertificateViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -72,7 +72,7 @@ class MovieViewSet(viewsets.ModelViewSet):
                                     'delete': [IsAdminUser]}
 
     def update(self, request, *args, pk=None):
-        movie = Movie.objects.get(id=pk)
+        movie = Movie.objects.prefetch_related('genres').get(id=pk)
         movie.title = request.data['title']
         movie.description = request.data['description']
         movie.save()
@@ -82,7 +82,7 @@ class MovieViewSet(viewsets.ModelViewSet):
             genre_to_add = Genre.objects.get(pk=genre['id'])
             movie.genres.add(genre_to_add)
         movie.save()
-        return Response({'me': 'I'}, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
 
     def get_permissions(self):
         try:
@@ -110,7 +110,7 @@ class RentalCertificateViewSet(viewsets.ModelViewSet):
     queryset = RentalCertificate.objects.all()
     serializer_class = RentalCertificateSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsAdminUser)
+    permission_classes = (IsAdminUser,)
 
 
 class GenreViewSet(viewsets.ModelViewSet):

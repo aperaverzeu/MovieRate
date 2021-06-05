@@ -14,7 +14,7 @@
                 />
                 <button v-if="isAdmin" @click="addNewMovie()">New Movie</button>
             </div>
-            <MovieDetails v-if="selectedMovie" :movie="selectedMovie" @updated="updated()" :token="token"/>
+            <MovieDetails v-if="selectedMovie" :isAdmin="isAdmin" :movie="selectedMovie" @updated="updated()" :token="token"/>
             <MovieEdit v-if="editedMovie" :movie="editedMovie" :genres="genres" @updated="updated()" :token="token"/>
         </div>
     </div>
@@ -67,6 +67,7 @@ export default ({
             this.editedMovie = {title: '', description: '', genres: []};
         },
         updated() {
+            console.log("Updated")
             this.getMovies()
         },
         getMovies() {
