@@ -1,8 +1,8 @@
 <template>
     <div>
-        <label for="username">Title</label><br/>
+        <label for="username">Username</label><br/>
         <input type="text" placeholder="username" id="username" v-model="username"><br/>
-        <label for="password">Description</label><br/>
+        <label for="password">Password</label><br/>
         <input type="password" placeholder="password" id="password" v-model="password"><br/>
         <button @click="login()" v-if="loginMode">Login</button>
         <button @click="register()" v-else>Register</button>
@@ -13,23 +13,18 @@
 </template>
 
 <script>
-export default {
-  name: 'Auth',
-  data() {
-      return {
-          username: '',
-          password: '',
-          token: '',
-          loginMode: true
-      }
-  },
-  created() {
-      if (this.$cookie.get("auth-token")) {
-          this.$router.push("/")
-      }
-  },
-  methods: {
-      login() {
+export default ({
+    name: 'Auth',
+    data() {
+        return {
+            username: '',
+            password: '',
+            token: '',
+            loginMode: true
+        }
+    },
+    methods: {
+        login() {
           fetch(`http://127.0.0.1:8000/auth/`, {
                 method: 'post',
                 headers: {
@@ -44,23 +39,31 @@ export default {
                 this.$router.push("/");
             })
             .catch(error => console.log(error))
+        },
+        register() {
+            console.log(this.password, this.username)
+            fetch(`http://127.0.0.1:8000/core/users/`, {
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({username: this.username, password: this.password}) 
+            })
+            .then(() => {
+                this.login()
+            })
+            .catch(error => console.log(error))
         }
-      },
-      register() {
-        fetch(`http://127.0.0.1:8000/core/users/`, {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({username: this.username, password: this.password}) 
-        })
-        .then(() => {
-            this.login()
-        })
-        .catch(error => console.log(error))
-      }
-  }
+    },
+    created() {
+        if (this.$cookie.get("auth-token")) {
+            this.$router.push("/")
+        }
+    },
+})
 </script>
+
+
 
 <style scoped>
     p {

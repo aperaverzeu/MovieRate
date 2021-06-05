@@ -4,13 +4,13 @@ from django.db import models
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True, db_index=True)
 
 
 class Movie(models.Model):
-    title = models.CharField(max_length=50)
-    description = models.TextField(max_length=500)
-    genre = models.ManyToManyField(Genre)
+    title = models.CharField(max_length=50, db_index=True)
+    description = models.TextField(max_length=500, db_index=True)
+    genres = models.ManyToManyField(Genre, blank=True, related_name='movies')
 
     def ratings_amount(self):
         ratings = Rating.objects.filter(movie=self)
@@ -40,7 +40,7 @@ class RentalCertificate(models.Model):
 class Rating(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], db_index=True)
 
     class Meta:
         unique_together = ['user', 'movie']

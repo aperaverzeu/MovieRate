@@ -63,7 +63,7 @@ export default ({
         },
         addNewMovie() {
             this.selectedMovie = null;
-            this.editedMovie = {title: '', description: '', genre: []};
+            this.editedMovie = {title: '', description: '', genres: []};
         },
         updated() {
             this.getMovies()
@@ -78,6 +78,7 @@ export default ({
             })
             .then(movies => movies.json())
             .then(movies => {
+                console.log(movies);
                 this.movies = movies;
                 if (this.selectedMovie) {
                     this.selectedMovie = this.movies.find(movie => movie.id === this.selectedMovie.id);

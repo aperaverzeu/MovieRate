@@ -36,7 +36,7 @@ export default ({
                     },
                     body: JSON.stringify({title: this.localMovie.title, 
                                           description: this.localMovie.description, 
-                                          genre: this.localMovie.genre}) 
+                                          genres: this.localMovie.genres})
                     
                 })
                 .then(res => res.json())
@@ -54,7 +54,7 @@ export default ({
                     },
                     body: JSON.stringify({title: this.localMovie.title, 
                                           description: this.localMovie.description, 
-                                          genre: [1]}) 
+                                          genres: [1]})
                     
                 })
                 .then(res => res.json())
