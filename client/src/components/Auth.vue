@@ -24,12 +24,12 @@
                 <button @click="register()"><span>Register</span> <i class="fa fa-check"></i></button>
             </div>
 
-            <a href="" class="pass-forgot"  @click="loginMode = false" v-if="loginMode">
+            <p class="pass-forgot"  @click="loginMode = false" v-if="loginMode">
                 Don't have an account? Register here
-            </a>
-            <a href="" class="pass-forgot"  @click="loginMode = true" v-else>
+            </p>
+            <p class="pass-forgot"  @click="loginMode = true" v-else>
                 You already have an account. Login here
-            </a>
+            </p>
 
             <div class="pass-forgot" v-if="errors.length">
                 <br>
