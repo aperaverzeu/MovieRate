@@ -5,7 +5,7 @@
         <div class="genres-container">
             <span v-for="genre in movie.genres" :key="genre.id" class="genre">{{genre.name}}</span>
         </div>
-        <button type="button" class="collapsible" @click="open = !open">Rental Certificate</button>
+        <button type="button" v-if="isAdmin" class="collapsible" @click="open = !open">Rental Certificate</button>
         <div class="content" :class="[open ? 'display-block' : 'display-none']">
             <RentalCertificate v-if="isAdmin" :token="token" :movie="movie"/>
         </div>
