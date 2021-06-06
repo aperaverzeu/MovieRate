@@ -110,7 +110,20 @@ class RentalCertificateViewSet(viewsets.ModelViewSet):
     queryset = RentalCertificate.objects.all()
     serializer_class = RentalCertificateSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        movie = Movie.objects.get(pk=request.data['movie_id'])
+        number = request.data['number']
+        country = request.data['country']
+        try:
+            certifiacate = RentalCertificate.objects.create(number=number, country=country, movie=movie)
+            serializer = RentalCertificateSerializer(certifiacate, many=False)
+            response = {'result': serializer.data}
+            return Response(response, status=status.HTTP_200_OK)
+        except:
+            response = {'result': 'same country and number set already exists, please choose another set'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GenreViewSet(viewsets.ModelViewSet):

@@ -67,7 +67,6 @@ export default ({
             this.editedMovie = {title: '', description: '', genres: []};
         },
         updated() {
-            console.log("Updated")
             this.getMovies()
         },
         getMovies() {
@@ -97,7 +96,6 @@ export default ({
             })
             .then(genres => genres.json())
             .then(genres => {
-                console.log(genres);
                 this.genres = genres;
             })
             .catch(error => console.log(error))

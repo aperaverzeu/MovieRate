@@ -31,6 +31,8 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 class RentalCertificateSerializer(serializers.ModelSerializer):
+    movie = MovieSerializer(read_only=True, many=False)
+
     class Meta:
         model = RentalCertificate
         fields = ('movie', 'number', 'country')
