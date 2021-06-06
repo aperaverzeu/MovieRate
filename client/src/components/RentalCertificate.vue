@@ -14,12 +14,12 @@
         </div>
         <div>
             <div v-if="formVisible">
-                <p v-if="errors.length">
-                    <b>Correct the following errors:</b>
+                <div v-if="errors.length">
+                    <h4 class="errors">Correct the following errors:</h4>
                     <ul>
-                    <li v-for="error in errors" :key="error">{{ error }}</li>
+                        <li v-for="error in errors" :key="error">{{ error }}</li>
                     </ul>
-                </p>
+                </div>
 
                 <p class="input-row">
                     <label for="name">Number: </label>
@@ -198,5 +198,8 @@ export default ({
         padding: 0.2rem 0.5rem;
         border: 1px solid black;
         background-color: white;
+    }
+    .errors {
+        margin-bottom: 1rem;
     }
 </style>
