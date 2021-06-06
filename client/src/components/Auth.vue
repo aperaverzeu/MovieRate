@@ -1,20 +1,45 @@
 <template>
-    <div>
-        <p v-if="errors.length">
-            <b>Correct the following errors:</b>
-            <ul>
-            <li v-for="error in errors" :key="error">{{ error }}</li>
-            </ul>
-        </p>
-        <label for="username">Username</label><br/>
-        <input type="text" placeholder="username" id="username" v-model="username"><br/>
-        <label for="password">Password</label><br/>
-        <input type="password" placeholder="password" id="password" v-model="password"><br/>
-        <button @click="login()" v-if="loginMode">Login</button>
-        <button @click="register()" v-else>Register</button>
 
-        <p @click="loginMode = false" v-if="loginMode">Don't have an account? Register here</p>
-        <p @click="loginMode = true" v-else>You already have an account. Login here</p>
+    <div class="materialContainer">
+        <div class="box">
+
+            <div class="title" v-if="loginMode">LOGIN</div>
+            <div class="title" v-else>REGISTER</div>
+
+            <div class="input">
+                <input type="text" name="name" placeholder="Username" id="name" v-model="username">
+                <span class="spin"></span>
+            </div>
+
+            <div class="input">
+                <input type="password" name="pass" placeholder="Password" id="pass" v-model="password">
+                <span class="spin"></span>
+            </div>
+
+            <div class="button login" v-if="loginMode">
+                <button @click="login()"><span>Login</span> <i class="fa fa-check"></i></button>
+            </div>
+
+            <div class="button login" v-else>
+                <button @click="register()"><span>Register</span> <i class="fa fa-check"></i></button>
+            </div>
+
+            <a href="" class="pass-forgot"  @click="loginMode = false" v-if="loginMode">
+                Don't have an account? Register here
+            </a>
+            <a href="" class="pass-forgot"  @click="loginMode = true" v-else>
+                You already have an account. Login here
+            </a>
+
+            <div class="pass-forgot" v-if="errors.length">
+                <br>
+                <p class="title title-2">Correct the following errors:</p>
+                <ul>
+                    <li v-for="error in errors" :key="error">{{ error }}</li>
+                </ul>
+            </div>
+
+        </div>
     </div>
 </template>
 
@@ -96,5 +121,10 @@ export default ({
 <style scoped>
     p {
         cursor: pointer;
+    }
+    .title-2 {
+        line-height: 26px;
+        font-size: 24px;
+        font-weight: 400;
     }
 </style>
