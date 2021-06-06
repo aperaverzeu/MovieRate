@@ -1,5 +1,11 @@
 <template>
-    <div>
+    <div v-if="this.movie">
+        <p v-if="errors.length">
+            <b>Correct the following errors:</b>
+            <ul>
+            <li v-for="error in errors" :key="error">{{ error }}</li>
+            </ul>
+        </p>
         <label for="title">Title</label><br/>
         <input type="text" placeholder="title" id="title" v-model="localMovie.title"><br/>
         <label for="description">Description</label><br/>
@@ -20,7 +26,8 @@ export default ({
     data() {
         return {
             localMovie: {...this.movie},
-            selectedGenres: []
+            selectedGenres: [],
+            errors: []
         } 
     },
     watch: {
@@ -32,6 +39,9 @@ export default ({
     },
     methods: {
         saveMovie() {
+            if (!this.checkForm()) {
+                return
+            }
             if (this.movie.id) {
                 fetch(`http://127.0.0.1:8000/core/movies/${this.movie.id}/`, {
                     method: 'put',
@@ -65,6 +75,20 @@ export default ({
                 })
                 .catch(error => console.log(error))
             }
+        },
+        checkForm() {
+            if(this.localMovie.title && this.localMovie.description && this.selectedGenres.length) 
+                return true;
+
+            this.errors = [];
+            if(!this.localMovie.title) 
+                this.errors.push("Title is required.");
+            if(!this.localMovie.description) 
+                this.errors.push("Description is required.");
+            if(!this.selectedGenres.length) 
+                this.errors.push("Select at least one genre.");
+
+            return false;
         }
     },
     created() {

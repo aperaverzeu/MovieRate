@@ -55,7 +55,17 @@ export default ({
                     'authorization': `Token ${this.token}`
                 }
             })
-            .then(() => this.movies = this.movies.filter(movie => movie.id !== movieId))
+            .then(() => {
+                this.movies = this.movies.filter(movie => movie.id !== movieId);
+                console.log(this.selectedMovie);
+                console.log(this.editedMovie);
+                if (this.selectedMovie && this.selectedMovie.id === movieId) {
+                    this.selectedMovie = null;
+                }
+                if (this.editedMovie && this.editedMovie.id === movieId) {
+                    this.editedMovie = null;
+                }
+            })
             .catch(error => console.log(error))
         },
         movieEdit(movieId) {
@@ -67,7 +77,8 @@ export default ({
             this.editedMovie = {title: '', description: '', genres: []};
         },
         updated() {
-            this.getMovies()
+            this.editedMovie = null;
+            this.getMovies();
         },
         getMovies() {
             fetch('http://127.0.0.1:8000/core/movies/', {

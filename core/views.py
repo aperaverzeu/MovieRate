@@ -84,6 +84,18 @@ class MovieViewSet(viewsets.ModelViewSet):
         movie.save()
         return Response(status=status.HTTP_200_OK)
 
+    def create(self, request, *args, **kwargs):
+        title = request.data['title']
+        description = request.data['description']
+        genres = GenreSerializer(request.data['genres'], many=True)
+        movie = Movie.objects.create(title=title, description=description)
+        movie.genres.clear()
+        for genre in genres.data:
+            genre_to_add = Genre.objects.get(pk=genre['id'])
+            movie.genres.add(genre_to_add)
+        movie.save()
+        return Response(status=status.HTTP_200_OK)
+
     def get_permissions(self):
         try:
             return [permission() for permission in self.permission_classes_by_action[self.action]]
