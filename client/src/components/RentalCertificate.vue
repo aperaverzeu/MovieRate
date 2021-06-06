@@ -1,16 +1,16 @@
 <template>
     <div>
         <div v-if="certificate && certificate.number">
-            <h4>Rental Certificate: </h4>
+            <h3>Rental Certificate: </h3>
             <p>Number: {{certificate.number}}</p>
             <p>Country: {{certificate.country}}</p>
-            <button @click="setCertificate()">Update Certificate</button>
+            <button v-if="!formVisible" class="custom-btn btn-logout black" @click="setCertificate()">Update Certificate</button>
             &nbsp;
-            <font-awesome-icon icon="trash" @click="deleteCertificate()"/>
+            <font-awesome-icon class="pointer" icon="trash" @click="deleteCertificate()"/>
         </div>
         <div v-else>
-            <p>No rental certificate</p>
-            <button @click="setCertificate()">Add Certificate</button>
+            <h3>No rental certificate</h3>
+            <button  v-if="!formVisible" class="custom-btn btn-logout black" @click="setCertificate()">Add Certificate</button>
         </div>
         <div>
             <div v-if="formVisible">
@@ -21,7 +21,7 @@
                     </ul>
                 </p>
 
-                <p>
+                <p class="input-row">
                     <label for="name">Number: </label>
                     <input
                     id="name"
@@ -31,20 +31,20 @@
                     >
                 </p>
 
-                <p>
+                <p class="input-row">
                     <label for="age">Country: </label>
                     <select name="movie" id="movie" v-model="country">
                         <option v-for="c in countriesList" :key="c" :value="c">{{c}}</option>
                     </select>
                 </p>
 
-                <p>
+                <p class="input-row">
                     <label for="movie">For movie: </label>
                     <input type="text" disabled readonly v-model="selectedMovie.title">
                 </p>
 
                 <p>
-                    <button @click="checkForm()">Save</button>
+                    <button @click="checkForm()" class="custom-btn btn-logout black">Save</button>
                 </p>
             </div>
         </div>
@@ -122,6 +122,7 @@ export default ({
                 })
                 .catch(error => console.log(error))
             }
+            this.formVisible = false;
         }, 
         checkForm() {
             if(this.number && this.country) 
@@ -173,3 +174,29 @@ export default ({
     }
 })
 </script>
+
+<style scoped>
+    h3 {
+        margin: 1rem 0rem;
+    }
+    .black {
+        font-size: 15px;
+        margin: 1rem 0rem;
+    }
+    .pointer {
+        cursor: pointer;
+    }
+    .input-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1rem 0rem;
+    }
+    input, select {
+        width: 50%;
+        padding: 0.2rem 0.5rem;
+        border: 1px solid black;
+        background-color: white;
+    }
+</style>

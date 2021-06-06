@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <h1 class="title title-2">Movie Rate <font-awesome-icon icon="film" /></h1>
+        <h1 class="title title-2">Movie Rater <font-awesome-icon icon="film" /></h1>
     </div>
 </template>
 

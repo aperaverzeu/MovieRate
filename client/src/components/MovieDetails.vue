@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>{{movie.title}}</h2>
-        <p>{{movie.description}}</p>
+        <p class="description">{{movie.description}}</p>
         <div class="genres-container">
             <span v-for="genre in movie.genres" :key="genre.id" class="genre">{{genre.name}}</span>
         </div>
@@ -21,7 +21,7 @@
         <h2>Rate it!</h2>
         <font-awesome-icon icon="star" class="bigger"
             v-for=" star in stars" :key="star"
-            :class="[highlighted > star - 1 ? 'purple' : '']"
+            :class="[highlighted > star - 1 ? 'red' : '']"
             @mouseenter="highlighted = star"
             @mouseleave="highlighted = -1"
             @click="ratingSelected(star)"
@@ -67,46 +67,60 @@ export default ({
 </script>
 
 <style scoped>
+    hr {
+        margin: 1rem;
+        background-color: #9c1a38;
+    }
     h2 {
-        cursor: pointer;
+        margin-bottom: 1rem;
+    }
+    .description {
+        text-align: start;
+        padding: 0.5rem;
     }
     .orange {
-        color: orange;
+        color: #974f60;
     }
-    .purple {
-        color: purple;
+    .red {
+        color: #9c1a38;
     }
     .bigger {
         font-size: 2rem;
     }
     .genres-container {
-        margin-bottom: 1.5rem;
+        margin: 1.5rem 0.5rem;
+        display: flex;
+        height: 100%;
+        flex-wrap: wrap;
     }
     .genre {
-        padding: 0.5rem 0.2rem;
-        border: 1px solid black;
+        padding: 0.8rem 0.3rem;
+        margin: 0.3rem;
+        color: #9c1a38;
+        border: 1px solid #9c1a38;
+        border-radius: 5px;
     }
     .collapsible {
-        background-color: rgb(124, 124, 124);
-        color: white;
+        background-color: transparent;
+        border: 1px solid black;
+        color: black;
         cursor: pointer;
-        padding: 18px;
+        padding: 1rem;
+        margin: 0rem 0.5rem;
         width: 100%;
-        border: none;
         text-align: left;
         outline: none;
         font-size: 15px;
     }
 
-    .active, .collapsible:hover {
-        background-color: #555;
-    }
-
     .content {
-        padding: 0 18px;
+        padding: 0 1rem;
         display: none;
         overflow: hidden;
-        background-color: #f1f1f1;
+        border: 1px solid black;
+        margin: 0rem 0.5rem;
+        width: 100%;
+        background-color: white;
     }
 
     .mb-2 {

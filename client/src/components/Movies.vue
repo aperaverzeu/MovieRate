@@ -1,8 +1,8 @@
 <template>
     <div>
-        <button @click="logout()">Logout</button>
+        <button class="custom-btn btn-logout white" @click="logout()">Logout</button>
         <div class="layout">
-            <div>
+            <div class="box">
                 <MovieItem 
                     v-for="movie in movies" 
                     :key="movie.id"
@@ -12,10 +12,13 @@
                     @movie-delete="movieDelete($event)"
                     @movie-edit="movieEdit($event)"
                 />
-                <button v-if="isAdmin" @click="addNewMovie()">New Movie</button>
+                <button class="custom-btn btn-logout black" v-if="isAdmin" @click="addNewMovie()">New Movie</button>
             </div>
-            <MovieDetails v-if="selectedMovie" :isAdmin="isAdmin" :movie="selectedMovie" @updated="updated()" :token="token"/>
-            <MovieEdit v-if="editedMovie" :movie="editedMovie" :genres="genres" @updated="updated()" :token="token"/>
+            <div></div>
+            <div class="box" v-if="selectedMovie || editedMovie">
+                <MovieDetails v-if="selectedMovie" :isAdmin="isAdmin" :movie="selectedMovie" @updated="updated()" :token="token"/>
+                <MovieEdit v-if="editedMovie" :movie="editedMovie" :genres="genres" @updated="updated()" :token="token"/>
+            </div>
         </div>
     </div>
 </template>
@@ -146,7 +149,8 @@ export default ({
 
 <style scoped>
     .layout {
+        margin-top: 2rem;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 10fr 1fr 10fr;
     }
 </style>

@@ -375,13 +375,8 @@
     background-color: #9c1a38;
     min-height: 100vh;
     font-family: "Roboto", sans-serif;
-    overflow: hidden;
   }
-  
-  html {
-    overflow: hidden;
-  }
-  
+    
   .materialContainer {
     width: 100%;
     max-width: 460px;
@@ -425,4 +420,71 @@ input:-webkit-autofill:active
 input:-webkit-autofill
 {
  -webkit-text-fill-color: rgb(0, 0, 0) !important;
+}
+
+.custom-btn {
+  width: 130px;
+  height: 40px;
+  padding: 10px 25px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 500;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+}
+
+.white {
+  color: #fff;
+}
+
+.white:after,
+.white:before {
+  background: #fff;
+}
+
+.black {
+  color: black;
+}
+
+.black:after,
+.black:before {
+  background: black;
+}
+
+.btn-logout {
+  width: 130px;
+  height: 40px;
+  line-height: 42px;
+  padding: 0;
+  border: none;
+  font-size: 20px;
+  background: transparent;
+}
+.btn-logout:hover {
+  background: transparent;
+   box-shadow:none;
+}
+.btn-logout:before,
+.btn-logout:after{
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  height:2px;
+  width:0;
+  transition:400ms ease all;
+}
+.btn-logout:after{
+  right:inherit;
+  top:inherit;
+  left:0;
+  bottom:0;
+}
+.btn-logout:hover:before,
+.btn-logout:hover:after{
+  width:100%;
+  transition:800ms ease all;
 }
