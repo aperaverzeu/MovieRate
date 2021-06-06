@@ -1,5 +1,11 @@
 <template>
     <div>
+        <p v-if="errors.length">
+            <b>Correct the following errors:</b>
+            <ul>
+            <li v-for="error in errors" :key="error">{{ error }}</li>
+            </ul>
+        </p>
         <label for="username">Username</label><br/>
         <input type="text" placeholder="username" id="username" v-model="username"><br/>
         <label for="password">Password</label><br/>
@@ -20,12 +26,15 @@ export default ({
             username: '',
             password: '',
             token: '',
+            errors: [],
             loginMode: true
         }
     },
     methods: {
         login() {
-          fetch(`http://127.0.0.1:8000/auth/`, {
+            if (!this.checkForm()) 
+                return 
+            fetch(`http://127.0.0.1:8000/auth/`, {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
@@ -34,14 +43,19 @@ export default ({
             })
             .then(res => res.json())
             .then(res => {
-                this.token = res.token;
-                this.$cookie.set('auth-token', this.token, { expires: '1M' });
-                this.$router.push("/");
+                if (res.token) {
+                    this.token = res.token;
+                    this.$cookie.set('auth-token', this.token, { expires: '1M' });
+                    this.$router.push("/"); 
+                } else {
+                    alert('Error')
+                }
             })
             .catch(error => console.log(error))
         },
         register() {
-            console.log(this.password, this.username)
+            if (!this.checkForm()) 
+                return 
             fetch(`http://127.0.0.1:8000/core/users/`, {
                 method: 'post',
                 headers: {
@@ -53,6 +67,20 @@ export default ({
                 this.login()
             })
             .catch(error => console.log(error))
+        },
+        checkForm() {
+            this.errors = [];
+            if(!this.username) 
+                this.errors.push("Username is required.");
+            if(!this.password) 
+                this.errors.push("Password is required.");
+            if(this.password && this.password.length < 6 && !this.loginMode) 
+                this.errors.push("Password should be at least 6 characters long");
+
+            if(this.errors.length)
+                return false;
+
+            return true;
         }
     },
     created() {
