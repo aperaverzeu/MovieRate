@@ -59,7 +59,7 @@ export default ({
         login() {
             if (!this.checkForm()) 
                 return 
-            fetch(`http://127.0.0.1:8000/auth/`, {
+            fetch(`http://0.0.0.0:8000/auth/`, {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
