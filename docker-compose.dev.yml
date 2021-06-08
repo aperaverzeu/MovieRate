@@ -1,0 +1,50 @@
+version: '3.3'
+
+services:
+    db:
+        image: postgres:12.0-alpine    
+        networks:
+            - django-nginx
+
+    backend:
+        build: ./backend
+        command: python3 ./backend/manage.py runserver 0.0.0.0:8000
+        volumes:
+            - .:/code
+            - django-static:/backend/static
+        networks:
+            - django-nginx
+        depends_on:
+            - db
+
+    frontend:
+        build:
+            context: ./client
+        volumes:
+            - './client:/app/:ro'
+            - 'app/node_modules'
+        ports: 
+            - 8080:8080
+        networks:
+            - django-nginx
+        depends_on:
+            - backend
+
+    nginx:
+        image: nginx:alpine
+        ports:
+            - "80:80"
+        depends_on:
+            - backend
+        volumes:
+            - ./nginx/dev.conf:/etc/nginx/nginx.conf:ro
+            - django-static:/usr/src/app/static
+        networks:
+            - django-nginx
+
+volumes: 
+    django-static:
+
+networks:
+    django-nginx:
+        driver: bridge

@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+    db:
+        image: postgres:12.0-alpine
+        networks: 
+            - django-nginx
+
+    backend:
+        image: asphedaemon/butomapro_backend
+        command: python backend/manage.py runserver 0.0.0.0:8080
+        networks: 
+            - django-nginx
+        volumes:
+            - .:/code
+            - django-static:/backend/static
+        depends_on:
+            - db
+            
+    # frontend:
+    #     image: asphedaemon/butomapro_frontend
+    #     command: npm run serve
+    #     volumes:
+    #         - './client:/app/:ro'
+    #         - 'app/node_modules'
+    #     ports: 
+    #         - 8080:8080
+    #     networks:
+    #         - django-nginx
+    #     depends_on:
+    #         - backend
+    
+    nginx:
+        build:
+            context: .
+            dockerfile: nginx/Dockerfile
+        ports:
+            - "80:80"
+        depends_on:
+            - backend
+        volumes:
+            - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
+            - django-static:/usr/src/app/static
+        networks:
+            - django-nginx
+
+volumes:
+    django-static:
+
+networks:
+    django-nginx:
+        driver: bridge
