@@ -1,7 +1,35 @@
 # MovieRate
- 
+
+## Summary
+
+Movie rater project for the rating movies. You can login and  rate your favorite movies
+
+#### Tech stack:
+ - Python
+ - Django
+ - Vue.js
+
+
+##### Deployed on Heroku and Firebase!
+Run this right on the internet
+> https://movie-rate-c87bd.web.app/
+
+
+*For the admin properties*
+
+Credentials and go to this url:
+ - mrojaczy
+ - k5(S7zp8
+
+> https://asphe-movie-rate.herokuapp.com/admin/
+
+
+
+
 ## Description
+<details><summary>click this to show images</summary>
 ![](./documentation/img/Screen%20Shot%202021-06-07%20at%2018.58.39.png)
+
 Main view of the app
 
 This is what we see as we come to the main page
@@ -39,3 +67,14 @@ As we create a new user and login
 ![](./documentation/img/Screen%20Shot%202021-06-07%20at%2019.05.38.png)
 Pay attention, that ordinary user cannot update or delete movies
 
+</details>
+
+
+## Local dev
+You can also run this by docker-compose locally, but may have so error while COPS operations
+
+> docker-compose up
+
+Or build it
+
+> docker-compose -f docker-compose.dev.yml up --build
