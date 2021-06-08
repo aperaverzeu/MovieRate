@@ -1,4 +1,5 @@
 # MovieRate
+Now deployed on heroku and firebase
 
 ## Summary
 
